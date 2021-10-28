@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
+  <version>1.1</version>
+  <rawtext>抓取粉色方块</rawtext>
+  <confidence>91</confidence>
+  <engine>local</engine>
+  <result>
+    <focus>action|color</focus>
+    <confidence>99|84</confidence>
+    <object>
+      <action id="65535">抓取</action>
+      <color id="0">粉色方块</color>
+    </object>
+  </result>
+</nlp>
+

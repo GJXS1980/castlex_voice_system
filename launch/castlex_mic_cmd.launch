@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<launch>
+    <!--打开语音唤醒-->
+    <include file="$(find castlex_voice_system)/launch/castlex_awake.launch"/>
+
+    <!--打开命令词识别-->
+    <node pkg = "castlex_voice_system" type = "castle_mic_cmd_node" name = "castle_mic_cmd_node" output="screen"/>
+
+    <!--打开命令词解析-->
+    <node pkg = "castlex_voice_system" type = "castle_mic_cmd.py" name = "XML_Analysis" output="screen">
+        <!-- 设置线速度、角速度、时间 -->
+        <param name="Confidence" value="50"/>
+        <!-- 设置命令词识别的打印结果的模板 -->
+        <param name="file_path" value="$(find castlex_voice_system)/params/castle_mic_cmd.xml" />
+        <!--     设置识别完之后的提示音 -->
+        <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
+        <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
+        <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />      
+    </node>
+
+</launch>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<launch>
+    <!--运行科大讯飞在线语音识别功能包-->
+    <node pkg = "castlex_voice_system" type = "castle_tts_node" name = "castle_tts_node" output="screen">
+        <!--会话参数-->
+	    <!--参数voice_name  发音人 可选项为 -->
+        <!--参数speed  语速 取值范围[0,100] -->
+        <!--参数volume  音量 取值范围[0,100] -->
+        <!--参数samplerate  合成采样率 取值16000或8000 -->
+        <!--参数rdn  合成音频数字发音，支持参数，0 数值优先,1 完全数值,2 完全字符串,3 字符串优先，默认值：0 -->
+        <param name="appid" value="appid = 551d49a3, work_dir = ." />
+        <param name="speech_param" value="voice_name = 	catherine, text_encoding = utf8, sample_rate = 16000, speed = 10, volume = 50, pitch = 50, rdn = 1" />
+        <param name="fileName_path" value="./voice.wav" />
+        <param name="playPath_path" value="play ./voice.wav" />
+    </node>
+    
+</launch>

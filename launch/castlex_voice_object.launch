@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<launch>
+    <!--打开语音唤醒-->
+    <include file="$(find castlex_voice_system)/launch/castlex_awake.launch"/>
+
+    <!-- 打开离线命令词识别 -->
+    <node pkg = "castlex_voice_system" type = "castle_object_order_node" name = "object_order_node" output="screen"/>
+    
+    <!--打开命令词解析-->
+    <node pkg = "castlex_voice_system" type = "object_detect.py" name = "XML_Analysis" output="screen">
+        <param name="file_path" value="$(find castlex_voice_system)/params/objectDetect.xml" />
+        <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
+        <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
+        <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />
+    </node>
+
+</launch>

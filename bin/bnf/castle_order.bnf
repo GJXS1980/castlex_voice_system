@@ -1,0 +1,15 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <commands>;
+!start <callstart>;
+
+<callstart>:<commands>;
+<commands>:前进!id(0)|向前移动!id(0)|
+后退!id(1)|向后移动!id(1)|
+左转!id(2)|向左转!id(2)|
+右转!id(3)|向右转!id(3)|
+左平移!id(4)|向左平移!id(4)|
+右平移!id(5)|向右平移!id(5)|
+停止!id(6)|停下!id(6)|急停!id(6)|
+减速!id(7)|加速!id(8);
+

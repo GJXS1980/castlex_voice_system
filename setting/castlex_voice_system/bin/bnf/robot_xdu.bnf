@@ -1,0 +1,18 @@
+﻿﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <action>;
+!slot <grade>;
+!slot <disinfect>;
+
+!start <callstart>;
+<callstart>:[<action>]<dial>;
+<action>:启动!id(1)|打开!id(1)|启!id(1)|开启!id(1)|开启!id(1)|进入!id(1)|
+关闭!id(0)|关!id(0)|停止!id(0)|停!id(0)|止!id(0);
+
+<dial>:<grade>[<disinfect>];
+<grade>:1级!id(1)|一级!id(1)|1!id(1)|一!id(1)|
+2级!id(2)|二级!id(2)|二!id(2)|2!id(2)|
+3级!id(3)|3!id(3)|三级!id(3)|三!id(3)|
+消毒!id(4)|消杀!id(4)|灭毒!id(4)|消!id(4);
+
+<disinfect>:消毒!id(1)|消杀!id(1)|灭毒!id(1)|毒!id(1)|灭!id(1)|杀!id(1)|消!id(1)|防疫!id(1);

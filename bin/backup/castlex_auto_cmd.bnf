@@ -1,0 +1,37 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <f>;
+!slot <start>;
+!slot <pick>;
+!slot <block>;
+!slot <t>;
+!slot <terminal>;
+
+!start <callstart>;
+
+<callstart>:[<f>]<dial>;
+
+<f>:请到|到|请去|去|请前往|前往|从|请从;
+
+<dial>:<start>[<pick>][<block>][<t>][<terminal>];
+
+<start>:A!id(0)|A点!id(0)|A地点!id(0)|A位置!id(0)|A号位置!id(0)|位置A!id(0)|地点A!id(0)|点A!id(0)|
+B!id(1)|B点!id(1)|B地点!id(1)|B位置!id(1)|B号位置!id(1)|位置B!id(1)|地点B!id(1)|点B!id(1)|
+C!id(2)|C点!id(2)|C地点!id(2)|C位置!id(2)|C号位置!id(2)|位置C!id(2)|地点C!id(2)|点C!id(2)|
+D!id(3)|D点!id(3)|D地点!id(3)|D位置!id(3)|D号位置!id(3)|位置D!id(3)|地点D!id(3)|点D!id(3);
+
+<pick>:拿|搬|取|提|挑|移;
+
+<block>:粉红!id(0)|粉红色!id(0)|粉红物块!id(0)|粉红方块!id(0)|粉红的!id(0)|粉红色的!id(0)|粉红方块!id(0)|粉色方块!id(0)|红!id(0)|红色!id(0)|红物块!id(0)|红方块!id(0)|红的!id(0)|红色的!id(0)|红方块!id(0)|色方块!id(0)|
+蓝!id(1)|蓝色!id(1)|蓝色物块!id(1)|蓝物块!id(1)|蓝方块!id(1)|蓝色方块!id(1)|蓝色的!id(1)|蓝的!id(1)|
+青!id(2)|青色!id(2)|青色物体!id(2)|青色方块!id(2)|青方块!id(2)|青物块!id(2)|青色的!id(2)|青的!id(2)|
+黄!id(3)|黄色!id(3)|黄色物块!id(3)|黄物块!id(3)|黄方块!id(3)|黄色方块!id(3)|黄色的!id(3)|黄的!id(3)|
+紫!id(4)|紫色!id(4)|紫色物体!id(4)|紫色方块!id(4)|紫物体!id(4)|紫方块!id(4)|紫色的!id(4)|紫的!id(4)|
+橙色!id(5)|橙!id(5)|橙色物体!id(5)|橙色方块!id(5)|橙色的!id(5)|橙的!id(5)|橙物体!id(5)|橙方块!id(5);
+
+<t>:到|去|至|去到;
+
+<terminal>:A!id(0)|A点!id(0)|A地点!id(0)|A位置!id(0)|A号位置!id(0)|位置A!id(0)|地点A!id(0)|点A!id(0)|
+B!id(1)|B点!id(1)|B地点!id(1)|B位置!id(1)|B号位置!id(1)|位置B!id(1)|地点B!id(1)|点B!id(1)|
+C!id(2)|C点!id(2)|C地点!id(2)|C位置!id(2)|C号位置!id(2)|位置C!id(2)|地点C!id(2)|点C!id(2)|
+D!id(3)|D点!id(3)|D地点!id(3)|D位置!id(3)|D号位置!id(3)|位置D!id(3)|地点D!id(3)|点D!id(3);

@@ -1,0 +1,20 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <want>;
+!slot <dialpre>;
+!slot <dialsuf>;
+!slot <contact>;
+
+!start <callstart>;
+<callstart>:[<want>]<dial>;
+<want>:向|朝|往|沿|请|快;
+<dial>:<dialpre><contact>[<dialsuf>];
+<dialpre>:前!id(0)|前面!id(0)|前面!id(0)|正方向!id(0)|直!id(0)|北!id(0)|北边!id(0)|北面!id(0)|
+后!id(1)|后面!id(1)|后边!id(1)|反方向!id(1)|南!id(1)|南边!id(1)|南面!id(1)|
+左!id(2)|左面!id(2)|左边!id(2)|左方向!id(2)|西!id(2)|西边!id(2)|西面!id(2)|顺时针!id(2)|
+右!id(3)|右面!id(3)|右边!id(3)|右方向!id(3)|东!id(3)|东边!id(3)|东面!id(3)|逆时针!id(3)|
+停!id(4);
+<contact>:平移!id(0)|走!id(0)|移动!id(0)|进!id(0)|跑!id(0)|动!id(0)|退!id(0)|移!id(0)|
+转!id(1)|旋转!id(1)|转动!id(1)|旋!id(1)|朝向!id(1)|
+止!id(2)|停!id(2);
+<dialsuf>:吧|啊|呀;

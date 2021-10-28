@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
+  <version>1.1</version>
+  <rawtext>呼吸灯</rawtext>
+  <confidence>97</confidence>
+  <engine>local</engine>
+  <result>
+    <focus>commands</focus>
+    <confidence>98</confidence>
+    <object>
+      <commands id="9">呼吸灯</commands>
+    </object>
+  </result>
+</nlp>
+

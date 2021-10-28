@@ -1,0 +1,14 @@
+﻿﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <action>;
+!slot <commen>;
+
+!start <callstart>;
+<callstart>:[<action>]<dial>;
+<action>:开始!id(0)|开!id(0)|始!id(0)|带我!id(0)|带!id(0)|我!id(0)|参观!id(0)|参!id(0)|浏览!id(0)|浏!id(0)|
+	 停止!id(1)|停!id(1)|止!id(1);
+
+<dial>:<commen>;
+<commen>:解说!id(0)|说!id(0)|解!id(0)|参!id(0)|观!id(0)|一下!id(0)|下吧!id(0)|吧!id(0); 
+
+

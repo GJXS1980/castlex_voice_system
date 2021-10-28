@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<launch>
+
+    <!--运行科大讯飞在线语音识别功能包-->
+    <node pkg = "castlex_voice_system" type = "castle_asr_node" name = "castle_asr_node" output="screen">
+
+        <!--会话参数-->
+        <param name="speech_param" value="sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8" />
+    </node>
+
+</launch>

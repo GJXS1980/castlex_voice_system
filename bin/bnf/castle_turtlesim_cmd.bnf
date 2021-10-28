@@ -1,0 +1,14 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <commands>;
+!start <callstart>;
+
+<callstart>:<commands>;
+<commands>:前进!id(0)|向前移动!id(0)|
+后退!id(1)|向后移动!id(1)|
+左转!id(2)|向左转!id(2)|
+右转!id(3)|向右转!id(3)|
+停止!id(4)|停下!id(4)|急停!id(4)|
+减速!id(5)|加速!id(6)|
+增加!id(7)|新增!id(7)|增加小海龟!id(7)|新增小海龟!id(7)|
+杀死!id(8)|减少!id(8)|删除!id(8)|杀死小海龟!id(8)|减少小海龟!id(8)|删除小海龟!id(8);

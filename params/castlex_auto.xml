@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
+  <version>1.1</version>
+  <rawtext>去客厅取蓝色方块到厨房</rawtext>
+  <confidence>88</confidence>
+  <engine>local</engine>
+  <result>
+    <focus>f|start|pick|block|t|terminal</focus>
+    <confidence>55|100|33|95|98|99</confidence>
+    <object>
+      <f id="65535">去</f>
+      <start id="0">客厅</start>
+      <pick id="65535">取</pick>
+      <block id="1">蓝色方块</block>
+      <t id="65535">到</t>
+      <terminal id="2">厨房</terminal>
+    </object>
+  </result>
+</nlp>
+

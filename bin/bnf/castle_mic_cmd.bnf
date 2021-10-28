@@ -1,0 +1,20 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <commands>;
+!start <callstart>;
+
+<callstart>:<commands>;
+<commands>:赤!id(0)|红!id(0)|红色!id(0)|
+橙!id(1)|橙色!id(1)|
+黄!id(2)|黄色!id(2)|
+绿!id(3)|绿色!id(3)|
+青!id(4)|青色!id(4)|
+蓝!id(5)|蓝色!id(5)|
+紫!id(6)|紫色!id(6)|
+关闭!id(7)|关灯!id(7)|
+跑马灯!id(8)|跑!id(8)|
+呼吸灯!id(9)|
+闪烁!id(10)|闪!id(10)|
+亮!id(11)|变亮!id(11)|提高亮度!id(11)|
+暗!id(12)|变暗!id(12)|降低亮度!id(12);
+

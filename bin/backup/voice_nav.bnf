@@ -1,0 +1,14 @@
+﻿﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <action>;
+!slot <position>;
+
+!start <callstart>;
+<callstart>:[<action>]<dial>;
+<action>:去|到|去到|往|前往|前进到|跑到|跑;
+
+<dial>:<position>;
+<position>:A!id(0)|A点!id(0)|A地点!id(0)|A位置!id(0)|A号位置!id(0)|位置A!id(0)|地点A!id(0)|点A!id(0)|目标A!id(0)|A目标!id(0)|目的地A!id(0)|A目的地!id(0)|
+B!id(1)|B点!id(1)|B地点!id(1)|B位置!id(1)|B号位置!id(1)|位置B!id(1)|地点B!id(1)|点B!id(1)|目标B!id(1)|B目标!id(1)|目的地B!id(1)|B目的地!id(1)|
+C!id(2)|C点!id(2)|C地点!id(2)|C位置!id(2)|C号位置!id(2)|位置C!id(2)|地点C!id(2)|点C!id(2)|目标C!id(2)|C目标!id(2)|目的地C!id(2)|C目的地!id(2)|
+D!id(3)|D点!id(3)|D地点!id(3)|D位置!id(3)|D号位置!id(3)|位置D!id(3)|地点D!id(3)|点D!id(3)|目标D!id(3)|D目标!id(3)|目的地D!id(3)|D目的地!id(3);

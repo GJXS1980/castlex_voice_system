@@ -1,0 +1,11 @@
+﻿﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <action>;
+!slot <position>;
+
+!start <callstart>;
+<callstart>:[<action>]<dial>;
+<action>:去|到|去到|往|前往|去目标|目标点|标点;
+
+<dial>:<position>;
+<position>:A!id(0)|a!id(0)|B!id(1)|b!id(1)|C!id(2)|c!id(2)|D!id(3)|d!id(3);
