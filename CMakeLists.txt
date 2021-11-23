@@ -284,32 +284,64 @@ install(TARGETS castle_tts_node castle_nlu_node castle_asr_node castle_awake_nod
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
+install(
+  DIRECTORY launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
  install(FILES
- launch/castlex_asr.launch
- launch/castlex_awake.launch
- launch/castlex_nlu.launch
- launch/castlex_tts.launch
- launch/castlex_voice_system.launch
- launch/offline_command.launch
+	setup.sh
+# launch/castlex_awake.launch
+# launch/castlex_nlu.launch
+# launch/castlex_tts.launch
+# launch/castlex_voice_system.launch
+# launch/offline_command.launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
  )
 
-install(PROGRAMS
-  scripts/castle_cmd.py
-  scripts/castle_mic_cmd.py
-  scripts/castle_turtlesim_cmd.py
-  scripts/castlex_auto.py
-  scripts/castlex_auto_cmd.py
-  scripts/castlex_multiword.py
-  scripts/mic_awake.py
-  scripts/mic_light_control.py
-  scripts/nlu_kb_gui.py
-  scripts/nlu_md.py
-  scripts/object_detect.py
-  scripts/robot_xdu.py
-  scripts/voice_cmd_word_understanding.py
-  scripts/voice_nav.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
+install(
+  DIRECTORY scripts
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(
+  DIRECTORY libs
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(
+  DIRECTORY res
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+
+install(
+  DIRECTORY bin
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(
+  DIRECTORY params
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+
+#install(PROGRAMS
+#  scripts/castle_cmd.py
+#  scripts/castle_mic_cmd.py
+#  scripts/castle_turtlesim_cmd.py
+#  scripts/castlex_auto.py
+#  scripts/castlex_auto_cmd.py
+#  scripts/castlex_multiword.py
+#  scripts/mic_awake.py
+#  scripts/mic_light_control.py
+#  scripts/nlu_kb_gui.py
+#  scripts/nlu_md.py
+#  scripts/object_detect.py
+#  scripts/robot_xdu.py
+#  scripts/voice_cmd_word_understanding.py
+#  scripts/voice_nav.py
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
 
 
 
