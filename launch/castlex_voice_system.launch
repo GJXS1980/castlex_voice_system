@@ -19,7 +19,7 @@
         <!--参数samplerate  合成采样率 取值16000或8000 -->
         <!--参数rdn  合成音频数字发音，支持参数，0 数值优先,1 完全数值,2 完全字符串,3 字符串优先，默认值：0 -->
         <param name="appid" value="appid = 551d49a3, work_dir = ." />
-        <param name="speech_param" value="voice_name = 	catherine, text_encoding = utf8, sample_rate = 16000, speed = 10, volume = 50, pitch = 50, rdn = 1" />
+        <param name="speech_param" value="voice_name = vixy, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 0" />
         <param name="fileName_path" value="./voice.wav" />
         <param name="playPath_path" value="play ./voice.wav" />
     </node>
