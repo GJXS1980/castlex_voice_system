@@ -13,7 +13,7 @@
     <!--打开命令词识别-->
     <node pkg = "castlex_voice_system" type = "offline_command_word" name = "offline_command_word" output="screen">
         <param name="appid" value="appid = 551d49a3, work_dir = ." />
-        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/object_detect.bnf" />
+        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/voice_nav.bnf" />
         <param name="RES_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/common.jet" />
         <param name="BUILD_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/GrmBuilld" />
         <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/voiceNav.xml" />

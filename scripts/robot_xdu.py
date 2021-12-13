@@ -79,7 +79,7 @@ class XML_Analysis():
 
     def Process_Speech_cmd_to_Speed(self):
         if (self.position_id == 306):
-            print '您输入的信息不完整，请重新输入！'
+            print('您输入的信息不完整，请重新输入！')
             playsound(self.voice3)
         else:
             #   判断语音识别的置信度是否达到要求
@@ -88,11 +88,11 @@ class XML_Analysis():
                 self.goal_point_msg.data = [self.grade_id, self.action_id]
                 #   发布命令词识别结果
                 self.pub.publish(self.goal_point_msg)
-                print '小谷：好的，收到!'
+                print('小谷：好的，收到!')
                 playsound(self.voice2)
                 self.result_confidence_data = 0               
             else:
-                print '语音识别未通过，请重新输入！'
+                print('语音识别未通过，请重新输入！')
                 playsound(self.voice1)    
 
 if __name__ == '__main__':
