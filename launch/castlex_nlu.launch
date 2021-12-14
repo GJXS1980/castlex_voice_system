@@ -2,6 +2,6 @@
 
 <launch>
     <!--运行图灵在线语义理解功能包-->
-    <node pkg = "castlex_voice_system" type = "castle_nlu_node" name = "castle_nlu_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_nlu_node" name = "castlex_nlu_node" output="screen">
     </node>
 </launch>

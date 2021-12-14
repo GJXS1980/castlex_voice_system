@@ -2,7 +2,7 @@
 
 <launch>
     <!--运行科大讯飞在线语音识别功能包-->
-    <node pkg = "castlex_voice_system" type = "castle_tts_node" name = "castle_tts_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_tts_node" name = "castlex_tts_node" output="screen">
         <!--会话参数-->
 	    <!--参数voice_name  发音人 可选项为 -->
         <!--参数speed  语速 取值范围[0,100] -->

@@ -194,9 +194,9 @@ void ttsCallback(const std_msgs::Int32::ConstPtr& msg)
 int main(int argc, char** argv)
 {
 
-	ros::init(argc, argv, "castle_asr_node");    //初始化节点，向节点管理器注册
+	ros::init(argc, argv, "castlex_asr_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("/voice/castle_awake_topic", 1, asrCallback);	//	订阅语音唤醒话题
+	ros::Subscriber sub = n.subscribe("/voice/castlex_awake_topic", 1, asrCallback);	//	订阅语音唤醒话题
 	//ros::Subscriber sub_tts = n.subscribe("/voice/castlex_xiaogu_tts_topic", 1, ttsCallback);	//	订阅语音合成话题
 
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
@@ -204,7 +204,7 @@ int main(int argc, char** argv)
 	nh.param("speech_param", speech_param, std::string("sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8"));
 	//printf("%s\n", appid);    //不支持UTF-8，因此终端打印出来是乱码
 
-	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castle_asr_topic", 3);	//	发布语音识别话题
+	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castlex_asr_topic", 3);	//	发布语音识别话题
 
 	ros::Rate loop_rate(10);    //10Hz循环周期
 	while(ros::ok())

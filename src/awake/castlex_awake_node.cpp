@@ -229,9 +229,9 @@ exit:
 int main(int argc, char* argv[])
 {
 	int         ret       = MSP_SUCCESS;
-	ros::init(argc, argv, "castle_awake_node");    //初始化节点，向节点管理器注册
+	ros::init(argc, argv, "castlex_awake_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Publisher pub = n.advertise<std_msgs::Int32>("/voice/castle_awake_topic", 1);
+	ros::Publisher pub = n.advertise<std_msgs::Int32>("/voice/castlex_awake_topic", 1);
 	 score_pub = n.advertise<std_msgs::Int32>("/voice/awake_score", 1);
 
 	/*

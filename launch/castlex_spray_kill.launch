@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 
 <launch>
+
     <!--打开语音唤醒-->
     <node pkg = "castlex_voice_system" type = "castlex_awake_node" name = "castlex_awake_node" output="screen">
         <param name="lgi_param" value="appid = 551d49a3, work_dir = ." />
@@ -9,21 +10,23 @@
         <param name="audio_file_path" value="/home/castlex/.ws/castlex_voice_system/bin/audio/awake.wav" />
     </node>
 
-    <!-- 打开离线命令词识别 -->
+    <!--打开命令词识别-->
     <node pkg = "castlex_voice_system" type = "offline_command_word" name = "offline_command_word" output="screen">
         <param name="appid" value="appid = 551d49a3, work_dir = ." />
-        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/castlex_voice_object.bnf" />
+        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/castlex_spray_kill.bnf" />
         <param name="RES_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/common.jet" />
         <param name="BUILD_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/GrmBuilld" />
-        <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/castlex_voice_object.xml" />
+        <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/castlex_spray_kill.xml" />
+	<!--remap from="/voice/castlex_cmd_topic" to="/voice/Disinfect_state_topic" /-->
     </node>
-    
+
     <!--打开命令词解析-->
-    <node pkg = "castlex_voice_system" type = "castlex_object_detect.py" name = "XML_Analysis" output="screen">
-        <param name="file_path" value="$(find castlex_voice_system)/params/objectDetect.xml" />
+    <node pkg = "castlex_voice_system" type = "castlex_spray_kill.py" name = "XML_Analysis" output="screen">
+        <param name="file_path" value="$(find castlex_voice_system)/params/robot_xdu.xml" />
         <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
         <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
         <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />
+	<remap from="/spray_kill" to="/Disinfect_CMD_Topic" />
     </node>
 
 </launch>

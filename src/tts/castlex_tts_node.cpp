@@ -260,7 +260,7 @@ int main(int argc, char* argv[])
 {
 	bool order_flag = false;
 	bool tts_flag = false;
-	ros::init(argc, argv, "castle_tts_node");    //初始化节点，节点名为"castle_xf_tts_node"
+	ros::init(argc, argv, "castlex_tts_node");    //初始化节点，节点名为"castle_xf_tts_node"
 	ros::NodeHandle n;
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
 	nh.param("appid", appid, string("appid = 551d49a3, work_dir = ."));    //从launch文件获取参数
@@ -271,9 +271,9 @@ int main(int argc, char* argv[])
 	const char *fileName = fileName_path.data();
 	const char *playPath = playPath_path.data();
 
-	ros::Subscriber sub = n.subscribe("/voice/castle_nlu_topic", 3, xfCallBack);    //	订阅语义理解话题
+	ros::Subscriber sub = n.subscribe("/voice/castlex_nlu_topic", 3, xfCallBack);    //	订阅语义理解话题
 	//ros::Subscriber sub2 = n.subscribe("/voice/castle_order_topic",orderCallBack);    //命令词识别失败时进行语音交互
-	pub = n.advertise<std_msgs::Int32>("/voice/castle_tts_topic", 1); 		//	发布语音合成话题
+	pub = n.advertise<std_msgs::Int32>("/voice/castlex_tts_topic", 1); 		//	发布语音合成话题
 	//asr_pub = n.advertise<std_msgs::Int32>("/voice/castle_awake_topic", 1);  //	发布语音唤醒数据话题
 	nh.param("speech_param", speech_param, string("voice_name = nannan, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 0"));
 

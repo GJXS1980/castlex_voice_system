@@ -2,7 +2,7 @@
 
 <launch>
     <!--打开语音唤醒-->
-    <node pkg = "castlex_voice_system" type = "castle_awake_node" name = "castle_awake_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_awake_node" name = "castlex_awake_node" output="screen">
         <param name="lgi_param" value="appid = 551d49a3, work_dir = ." />
         <param name="response" value="/home/castlex/.ws/castlex_voice_system/res/music/wozai.wav" />
         <param name="ssb_param_path" value="/home/castlex/.ws/castlex_voice_system/res/ivw/wakeupresource.jet" />

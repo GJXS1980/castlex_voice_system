@@ -22,8 +22,8 @@ class XML_Analysis():
         self.voice3 = rospy.get_param("~ReEnterAuido_file_path", "/params/voice/ReEnterAuido.mp3")
 
         #在launch文件中获取参数
-        self.sub = rospy.Subscriber('/voice/castle_order_topic', String , self.cmd_callback)  #   订阅离线命令词识别结果话题
-        self.pub = rospy.Publisher('/xdu_flag', Int32MultiArray, queue_size = 1)  #   发布离线命令词识别的命令词话题
+        self.sub = rospy.Subscriber('/voice/castlex_order_topic', String , self.cmd_callback)  #   订阅离线命令词识别结果话题
+        self.pub = rospy.Publisher('/spray_kill', Int32MultiArray, queue_size = 1)  #   发布离线命令词识别的命令词话题
 
         # self.r = rospy.Rate(10)
         #   主函数

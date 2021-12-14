@@ -6,10 +6,6 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <strings.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 
 #include "qisr.h"
 #include "msp_cmn.h"
@@ -36,8 +32,6 @@ bool order_flag = false;
 string result = "";
 #define ASRCMD 1
 
-const char ack[]={"play /home/castlex/castlex_ws/src/castlex_voice_system/res/music/haode.wav"};
-
 string temp_path;
 string pkg_path = ros::package::getPath("castlex_voice_system");
 string fo_("fo|");
@@ -47,10 +41,14 @@ const char * ASR_RES_PATH        = path1.data(); //离线语法识别资源路�
 string BUILD_path("/bin/msc/res/asr/GrmBuilld");
 string path2 = pkg_path+BUILD_path;
 const char * GRM_BUILD_PATH      = path2.data(); //构建离线语法识别网络生成数据保存路径
-string FILE_path("/bin/bnf/robot_zwai.bnf");
+string FILE_path("/bin/bnf/castle_mic_cmd.bnf");
 string path3 = pkg_path+FILE_path;
 const char * GRM_FILE = path3.data(); //构建离线识别语法网络所用的语法文件
 const char * LEX_NAME            = "contact"; //更新离线识别语法的contact槽（语法文件为此示例中使用的call.bnf）
+
+string xml_path("/params/castle_mic_cmd.xml");
+string path4 = pkg_path+xml_path;
+const char *path = path4.data(); //XML文件地址
 
 typedef struct _UserData {
 	int     build_fini; //标识语法构建是否完成
@@ -62,20 +60,31 @@ typedef struct _UserData {
 int build_grammar(UserData *udata); //构建离线识别语法网络
 int run_asr(UserData *udata); //进行离线语法识别
 
-ros::Publisher zwai_pub;
-ros::Publisher cmd_pub;
-ros::Publisher start_pub;
-
-string robot_ack;
-typedef struct order_id_t
+//将识别结果写入XML文件
+void write_data_to_file(const char *path, char *str)
 {
-	int confidence;
-	int action;
-	int ziwai;
+	FILE *fd = fopen(path, "a+");
+	if (fd == NULL) 
+	{
+		printf("fd is NULL and open file fail\n");
+		return;
+	}
+/*	printf("fd != NULL\n");
+*/	if (str && str[0] != 0) 
+	{
+		fwrite(str, strlen(str), 1, fd);
+		char *next = "\n";
+		fwrite(next, strlen(next), 1, fd);
+	}
+	fclose(fd);
+}
 
-}order;
-
-
+//清空XML文件内容
+void clear_file_data(const char *path)
+{
+	FILE *fd = fopen(path, "w");//用写方式打开，然后关闭文件即可。
+	fclose(fd);
+}
 
 int build_grm_cb(int ecode, const char *info, void *udata)
 {
@@ -144,83 +153,17 @@ int build_grammar(UserData *udata)
 	return ret;
 }
 
-int my_atoi(char *src)
-{
-	char *p = src;
-	int num = 0;
-	int index = 0;
-
-	if(src == NULL)
-		return -1;
-
-	while(*p++ != '\0')
-	{
-		if(*p<'0' || *p>'9')
-		if(index)	break;
-		else		continue;
-		
-		index = 1;
-		num = num*10 + (*p - '0');
-	
-	}	
-
-
-	return num;
-
-}
-
 
 static void show_result(char *str, char is_over)
 {
-	char *pos = NULL;
-	std_msgs::Int32 cmd_msg;	
-	order order_id;
-	
+	printf("\r识别结果: [ \n%s ]", str);
+	clear_file_data(path);
+	write_data_to_file(path, str);  //将识别结果写入XML
+	string s(str);
+	result = s;
 	if(is_over)
-	{
-		//printf("result-text:%s\n",str);
-
-		pos = strstr(str,"<confidence>");
-		if(pos != NULL)
-			order_id.confidence = my_atoi(pos);	
-		
-		if(order_id.confidence<30) return;
-
-		pos = strstr(str,"action id="); 
-		
-		if(pos != NULL)
-			order_id.action = my_atoi(pos);		
-		
-		//printf("action-text:%s\n",pos);
-		pos = strstr(str,"ziwai id"); 
-	
-		if(pos != NULL)
-			order_id.ziwai = my_atoi(pos);
-				
-
-		if(order_id.action==1 && order_id.ziwai)
-		{
-			cmd_msg.data = 1;		
-			zwai_pub.publish(cmd_msg);
-			printf("***********收到命令：开启紫外消毒器***********\n");
-		}
-		else if(order_id.action==0 && order_id.ziwai)
-		{
-			cmd_msg.data = 0;		
-			zwai_pub.publish(cmd_msg);
-			printf("***********收到命令：关闭紫外消毒器***********\n");
-
-
-		}
-		else return;
-		
-		
-		system(ack);
-		result = string(str);
-		
-		order_flag = true;
-	
-	}
+		putchar('\n');
+	order_flag = true;
 }
 
 static char *g_result = NULL;
@@ -337,7 +280,7 @@ int run_asr(UserData *udata)
 
 int iatalk()
 {
-	const char *login_config    = "appid = 551d49a3"; //登录参数
+	const char *login_config    = "appid = 551d49a3"; //登录参数 
 	UserData asr_data; 
 	int ret                     = 0 ;
 	char c;
@@ -372,7 +315,7 @@ exit_0:
 	return 0;
 exit_1:
 	MSPLogout();
-	printf("命令词识别成功...\n");
+	//printf("命令词识别成功...\n");
 	return 1;
 }
 
@@ -385,40 +328,34 @@ void orderCallback(const std_msgs::Int32::ConstPtr& msg)
 	}
 }
 
-
-
 int main(int argc, char* argv[])
 {
-//	std_msgs::String hello;
-//	printf(path1.data());
-	ros::init(argc, argv, "iot_order_node");    //初始化节点，向节点管理器注册
+	printf(path1.data());
+	ros::init(argc, argv, "castlex_cmd_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("/voice/castle_awake_topic", 1, orderCallback);
-	
+	ros::Subscriber sub = n.subscribe("/voice/castlex_awake_topic", 1, orderCallback);
+
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
-	nh.param<string>("robot_ack", robot_ack, "/home/castlex/castlex_ws/src/castle_voice_system/res/music/haode.wav");  
-	
-	zwai_pub = n.advertise<std_msgs::Int32>("/Ultraviolet_CMD_Topic", 1);		// 发布离线命令词识别结果话题
-	cmd_pub = n.advertise<std_msgs::Int32>("/voice/Ultraviolet_state_topic", 1);	//识别离线命令词成功的flag话题
-	//start_pub = n.advertise<std_msgs::String>("/voice/castle_nlu_topic",3);    	//发布语音合成
+	//nh.param("appid", appid, std::string("appid = 5b6d44e, work_dir = ."));    //从launch文件获取参数
+	//nh.param("speech_param", speech_param, std::string("sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8"));
+	//printf("%s\n", appid);    //不支持UTF-8，因此终端打印出来是乱码
 
-//	hello.data = "我是防疫机器人小谷，很高兴为您服务!!!";
-//	start_pub.publish(hello);
+	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castlex_order_topic", 3);	// 发布离线命令词识别结果话题
+	ros::Publisher cmd_pub = n.advertise<std_msgs::Int32>("/voice/castlex_cmd_topic", 1);	//	识别离线命令词成功的flag话题
 
-	cout<<"我是防疫机器人小谷，很高兴为您服务!!!"<<endl;
-	
-	
 	ros::Rate loop_rate(10);    //10Hz循环周期
-
 	while(ros::ok())
 	{
 		if(order_flag)
 		{
+			std_msgs::String msg;
+			msg.data = result;    //将asr返回文本写入消息，发布到topic上
+			pub.publish(msg);
+			order_flag = false; 
+			record_flag = false; //录音完成
 			std_msgs::Int32 cmd_msg;
 			cmd_msg.data = 1;
 			cmd_pub.publish(cmd_msg);
-			record_flag = false; 	//录音完成
-			order_flag = false;
 		}
 		loop_rate.sleep();
 		ros::spinOnce();

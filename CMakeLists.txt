@@ -211,14 +211,14 @@ include_directories(
 # catkin_add_nosetests(test)
 
 
-add_executable(castle_tts_node src/tts/castle_tts_node.cpp)
-target_link_libraries(castle_tts_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lmsc)
+add_executable(castlex_tts_node src/tts/castlex_tts_node.cpp)
+target_link_libraries(castlex_tts_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lmsc)
 
-add_executable(castle_nlu_node src/nlu/castle_nlu_node.cpp)
-target_link_libraries(castle_nlu_node ${catkin_LIBRARIES} -ljsoncpp -lcurl)
+add_executable(castlex_nlu_node src/nlu/castlex_nlu_node.cpp)
+target_link_libraries(castlex_nlu_node ${catkin_LIBRARIES} -ljsoncpp -lcurl)
 
-add_executable(castle_asr_node src/asr/castle_asr_node.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
-target_link_libraries(castle_asr_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
+add_executable(castlex_asr_node src/asr/castlex_asr_node.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
+target_link_libraries(castlex_asr_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
 #add_executable(castle_object_order_node src/order/object_order.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
 #target_link_libraries(castle_object_order_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
@@ -257,8 +257,8 @@ target_link_libraries(castle_asr_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -l
 #target_link_libraries(castlex_zwai_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
 ##################  castlex_iot_order   ########################
-#add_executable(iot_order_node src/order/voice_iot_order.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
-#target_link_libraries(iot_order_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
+add_executable(iot_order_node src/order/voice_iot_order.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
+target_link_libraries(iot_order_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
 ##################  commen_order_order   ########################
 #add_executable(commen_order_node src/order/castlex_com.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
@@ -266,8 +266,8 @@ target_link_libraries(castle_asr_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -l
 
 
 ##################  castle_awake   ########################
-add_executable(castle_awake_node src/awake/castle_awake_node.cpp src/linuxrec.cpp src/speech_recognizer.cpp)
-target_link_libraries(castle_awake_node ${catkin_LIBRARIES} -lmsc -lrt -ldl -lpthread -lasound)
+add_executable(castlex_awake_node src/awake/castlex_awake_node.cpp src/linuxrec.cpp src/speech_recognizer.cpp)
+target_link_libraries(castlex_awake_node ${catkin_LIBRARIES} -lmsc -lrt -ldl -lpthread -lasound)
 
 add_executable(offline_command_word src/order/offline_command_word.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
 target_link_libraries(offline_command_word ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
@@ -278,7 +278,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-install(TARGETS castle_tts_node castle_nlu_node castle_asr_node castle_awake_node   offline_command_word
+install(TARGETS iot_order_node castlex_tts_node castlex_nlu_node castlex_asr_node castlex_awake_node   offline_command_word
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

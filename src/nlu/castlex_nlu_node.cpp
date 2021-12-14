@@ -160,8 +160,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "castlex_tl_nlu_node");    //初始化节点
     ros::NodeHandle n;
 
-    std::string nlu_topic="/voice/castle_asr_topic";    //定义语音识别的话题名称
-    std::string tts_topic="/voice/castle_nlu_topic";    //定义图灵发布的话题名称，与讯飞tts订阅话题相同
+    std::string nlu_topic="/voice/castlex_asr_topic";    //定义语音识别的话题名称
+    std::string tts_topic="/voice/castlex_nlu_topic";    //定义图灵发布的话题名称，与讯飞tts订阅话题相同
 
     ros::NodeHandle nh("~");    //用于launch文件传递参数
     //nh.param("tuling_key", tuling_key, string("0dd3488916f64d4eb3356308c7c20823"));

@@ -3,7 +3,7 @@
 <launch>
 
     <!--打开语音唤醒-->
-    <node pkg = "castlex_voice_system" type = "castle_awake_node" name = "castle_awake_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_awake_node" name = "castlex_awake_node" output="screen">
         <param name="lgi_param" value="appid = 551d49a3, work_dir = ." />
         <param name="response" value="/home/castlex/.ws/castlex_voice_system/res/music/wozai.wav" />
         <param name="ssb_param_path" value="/home/castlex/.ws/castlex_voice_system/res/ivw/wakeupresource.jet" />
@@ -11,7 +11,7 @@
     </node>
 
     <!--打开语音合成-->
- <node pkg = "castlex_voice_system" type = "castle_tts_node" name = "castle_tts_node" output="screen">
+ <node pkg = "castlex_voice_system" type = "castlex_tts_node" name = "castlex_tts_node" output="screen">
         <!--会话参数-->
 	    <!--参数voice_name  发音人 可选项为 -->
         <!--参数speed  语速 取值范围[0,100] -->
@@ -25,12 +25,12 @@
     </node>
 
     <!--打开语义理解-->
-    <node pkg = "castlex_voice_system" type = "castle_nlu_node" name = "castle_nlu_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_nlu_node" name = "castlex_nlu_node" output="screen">
         <param name="userid" value="HGcastle" />
     </node>
     
     <!--打开语音识别-->
-    <node pkg = "castlex_voice_system" type = "castle_asr_node" name = "castle_asr_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_asr_node" name = "castlex_asr_node" output="screen">
         <param name="speech_param" value="sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8" />
     </node>
 

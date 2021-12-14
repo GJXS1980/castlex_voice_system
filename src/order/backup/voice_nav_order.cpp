@@ -333,15 +333,15 @@ int main(int argc, char* argv[])
 	printf(path1.data());
 	ros::init(argc, argv, "castle_voice_nav_order_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("/voice/castle_awake_topic", 1, orderCallback);
+	ros::Subscriber sub = n.subscribe("/voice/castlex_awake_topic", 1, orderCallback);
 
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
 	//nh.param("appid", appid, std::string("appid = 5b6d44e, work_dir = ."));    //从launch文件获取参数
 	//nh.param("speech_param", speech_param, std::string("sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8"));
 	//printf("%s\n", appid);    //不支持UTF-8，因此终端打印出来是乱码
 
-	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castle_order_topic", 3);	// 发布离线命令词识别结果话题
-	ros::Publisher cmd_pub = n.advertise<std_msgs::Int32>("/voice/castle_cmd_topic", 1);	//	识别离线命令词成功的flag话题
+	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castlex_order_topic", 3);	// 发布离线命令词识别结果话题
+	ros::Publisher cmd_pub = n.advertise<std_msgs::Int32>("/voice/castlex_cmd_topic", 1);	//	识别离线命令词成功的flag话题
 
 	ros::Rate loop_rate(10);    //10Hz循环周期
 	while(ros::ok())

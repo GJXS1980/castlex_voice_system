@@ -1,6 +1,6 @@
 /*
 * 语音听写(iFly Auto Transform)技术能够实时地将语音转换成对应的文字。
-*/ 
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,6 +32,9 @@ bool order_flag = false;
 string result = "";
 #define ASRCMD 1
 
+const char ack[]={"play /home/castlex/castlex_ws/src/castlex_voice_system/res/music/haode.wav"};
+const char notack[]={"play /home/castlex/castlex_ws/src/castlex_voice_system/res/music/haode.wav"};
+
 string temp_path;
 string pkg_path = ros::package::getPath("castlex_voice_system");
 string fo_("fo|");
@@ -41,14 +44,10 @@ const char * ASR_RES_PATH        = path1.data(); //离线语法识别资源路�
 string BUILD_path("/bin/msc/res/asr/GrmBuilld");
 string path2 = pkg_path+BUILD_path;
 const char * GRM_BUILD_PATH      = path2.data(); //构建离线语法识别网络生成数据保存路径
-string FILE_path("/bin/bnf/object_detect.bnf");
+string FILE_path("/bin/bnf/robot_iot.bnf");
 string path3 = pkg_path+FILE_path;
 const char * GRM_FILE = path3.data(); //构建离线识别语法网络所用的语法文件
 const char * LEX_NAME            = "contact"; //更新离线识别语法的contact槽（语法文件为此示例中使用的call.bnf）
-
-string xml_path("/params/objectDetect.xml");
-string path4 = pkg_path+xml_path;
-const char *path = path4.data(); //XML文件地址
 
 typedef struct _UserData {
 	int     build_fini; //标识语法构建是否完成
@@ -60,31 +59,23 @@ typedef struct _UserData {
 int build_grammar(UserData *udata); //构建离线识别语法网络
 int run_asr(UserData *udata); //进行离线语法识别
 
-//将识别结果写入XML文件
-void write_data_to_file(const char *path, char *str)
-{
-	FILE *fd = fopen(path, "a+");
-	if (fd == NULL) 
-	{
-		printf("fd is NULL and open file fail\n");
-		return;
-	}
-/*	printf("fd != NULL\n");
-*/	if (str && str[0] != 0) 
-	{
-		fwrite(str, strlen(str), 1, fd);
-		char *next = "\n";
-		fwrite(next, strlen(next), 1, fd);
-	}
-	fclose(fd);
-}
 
-//清空XML文件内容
-void clear_file_data(const char *path)
+ros::Publisher light_pub;
+ros::Publisher trashcan_pub;
+ros::Publisher cmd_pub;
+ros::Publisher door_pub;
+ros::Publisher trashcan_reset_pub;
+
+
+struct order_id_t
 {
-	FILE *fd = fopen(path, "w");//用写方式打开，然后关闭文件即可。
-	fclose(fd);
-}
+	int confidence;
+	int action;
+	int iot;
+
+}order_id;
+
+static int led_state = 0x00;
 
 int build_grm_cb(int ecode, const char *info, void *udata)
 {
@@ -153,17 +144,165 @@ int build_grammar(UserData *udata)
 	return ret;
 }
 
+int my_atoi(char *src)
+{
+	char *p = src;
+	int num = 0;
+	int index = 0;
+
+	if(src == NULL)
+		return -1;
+
+	while(*p++ != '\0')
+	{
+		if(*p<'0' || *p>'9')
+		if(index)	break;
+		else		continue;
+		
+		index = 1;
+		num = num*10 + (*p - '0');
+	
+	}	
+
+
+	return num;
+
+}
+
 
 static void show_result(char *str, char is_over)
 {
-/*	printf("\rResult: [ \n%s ]", str);
-*/	clear_file_data(path);
-	write_data_to_file(path, str);  //将识别结果写入XML
-	string s(str);
-	result = s;
+	char *pos = NULL;
+	std_msgs::Int32 cmd_msg;	
+
 	if(is_over)
-		putchar('\n');
-	order_flag = true;
+	{
+		//printf("result-text:%s\n",str);
+
+		pos = strstr(str,"<confidence>");
+		if(pos != NULL)
+			order_id.confidence = my_atoi(pos);	
+		
+		if(order_id.confidence<40) return;
+
+		pos = strstr(str,"action id="); 
+		
+		if(pos != NULL)
+			order_id.action = my_atoi(pos);		
+		
+		//printf("action-text:%s\n",pos);
+		pos = strstr(str,"iot id"); 
+	
+		if(pos != NULL)
+			order_id.iot = my_atoi(pos);
+		//printf("grade-text:%s\n",pos);
+
+		//printf("action:%d iot:%d\n",order_id.action,order_id.iot);
+
+		if(order_id.action==0 && order_id.iot == 0)
+		{
+	                led_state &= ~(1<<0); 		
+      			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：关卧室灯***********\n");
+		}
+		else if(order_id.action==0 && order_id.iot == 1)
+		{
+			cmd_msg.data = 0;		
+			trashcan_pub.publish(cmd_msg);
+			printf("***********收到命令：关窗帘***********\n");
+
+
+		}
+		else if(order_id.action==1 && order_id.iot == 0)
+		{
+			led_state |= (1<<0); 			
+			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：开卧室灯***********\n");
+		}
+		else if(order_id.action==1 && order_id.iot == 1)
+		{
+			cmd_msg.data = 1;		
+			trashcan_pub.publish(cmd_msg);
+			printf("***********收到命令：开窗帘***********\n");
+
+		}
+//
+		else if(order_id.action==0 && order_id.iot == 2)
+		{
+			led_state &= ~(1<<1);
+                        cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：关走廊灯***********\n");
+
+		}
+		else if(order_id.action==1 && order_id.iot == 2)
+		{
+                        led_state |= (1<<1);
+			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：开走廊灯***********\n");
+
+		}
+		else if(order_id.action==0 && order_id.iot == 3)
+		{
+			led_state &= ~(1<<2);		
+			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：关房门灯***********\n");
+
+		}
+		else if(order_id.action==1 && order_id.iot == 3)
+		{
+			led_state |= (1<<2);
+			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：开房门灯***********\n");
+
+		}
+
+		else if(order_id.action==2 && order_id.iot == 4)
+		{
+			cmd_msg.data = 1;		
+			door_pub.publish(cmd_msg);
+			printf("***********收到命令：一号客房门铃***********\n");
+
+		}
+		else if(order_id.action==2 && order_id.iot == 5)
+		{
+			cmd_msg.data = 2;
+			door_pub.publish(cmd_msg);		
+			printf("***********收到命令：二号客房门铃***********\n");
+
+		}
+		else if(order_id.action==0 && order_id.iot == 6)
+		{
+			led_state = 0;
+			cmd_msg.data = led_state;		
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：关所有灯***********\n");
+
+		}
+		else if(order_id.action==1 && order_id.iot == 6)
+		{
+			led_state = 7;
+			cmd_msg.data = led_state;		//开所有灯
+			light_pub.publish(cmd_msg);
+			printf("***********收到命令：开所有灯***********\n");
+
+		}
+		else{
+			printf("***********我没听清楚哦***********\n");
+		return;
+               } 
+			
+		system(ack);
+		result = string(str);
+		
+		order_flag = true;
+	
+	}
 }
 
 static char *g_result = NULL;
@@ -328,34 +467,40 @@ void orderCallback(const std_msgs::Int32::ConstPtr& msg)
 	}
 }
 
+
+
 int main(int argc, char* argv[])
 {
 	printf(path1.data());
-	ros::init(argc, argv, "castle_object_order_node");    //初始化节点，向节点管理器注册
+	ros::init(argc, argv, "iot_order_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("/voice/castle_awake_topic", 1, orderCallback);
+	ros::Subscriber sub = n.subscribe("/voice/castlex_awake_topic", 1, orderCallback);
 
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
-	//nh.param("appid", appid, std::string("appid = 5b6d44e, work_dir = ."));    //从launch文件获取参数
+	//nh.param<int>("trashcan_state", trashcan_state, 0);    //从launch文件获取参数
 	//nh.param("speech_param", speech_param, std::string("sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8"));
 	//printf("%s\n", appid);    //不支持UTF-8，因此终端打印出来是乱码
 
-	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castle_order_topic", 3);	// 发布离线命令词识别结果话题
-	ros::Publisher cmd_pub = n.advertise<std_msgs::Int32>("/voice/castle_cmd_topic", 1);	//	识别离线命令词成功的flag话题
+	 light_pub = n.advertise<std_msgs::Int32>("/Lighting_CMD_Topic", 1);		// 发布离线命令词识别结果话题
+	 trashcan_pub = n.advertise<std_msgs::Int32>("/Trashcan_CMD_Topic", 1);		// 发布离线命令词识别结果话题
 
+	 cmd_pub = n.advertise<std_msgs::Int32>("/voice/iot_state_topic", 1);	//识别离线命令词成功的flag话题
+	 trashcan_reset_pub = n.advertise<std_msgs::Int32>("/Trashcan_RESET_Topic", 1);
+         door_pub = n.advertise<std_msgs::Int32>("/Door_CMD_Topic", 1);
+
+	std_msgs::Int32 reset;
+	reset.data = 1;
+	trashcan_reset_pub.publish(reset);
 	ros::Rate loop_rate(10);    //10Hz循环周期
 	while(ros::ok())
 	{
 		if(order_flag)
 		{
-			std_msgs::String msg;
-			msg.data = result;    //将asr返回文本写入消息，发布到topic上
-			pub.publish(msg);
-			order_flag = false; 
-			record_flag = false; //录音完成
 			std_msgs::Int32 cmd_msg;
 			cmd_msg.data = 1;
 			cmd_pub.publish(cmd_msg);
+			record_flag = false; 	//录音完成
+			order_flag = false;
 		}
 		loop_rate.sleep();
 		ros::spinOnce();

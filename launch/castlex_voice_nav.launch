@@ -3,7 +3,7 @@
 <launch>
 
     <!--打开语音唤醒-->
-    <node pkg = "castlex_voice_system" type = "castle_awake_node" name = "castle_awake_node" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_awake_node" name = "castlex_awake_node" output="screen">
         <param name="lgi_param" value="appid = 551d49a3, work_dir = ." />
         <param name="response" value="/home/castlex/.ws/castlex_voice_system/res/music/wozai.wav" />
         <param name="ssb_param_path" value="/home/castlex/.ws/castlex_voice_system/res/ivw/wakeupresource.jet" />
@@ -13,14 +13,14 @@
     <!--打开命令词识别-->
     <node pkg = "castlex_voice_system" type = "offline_command_word" name = "offline_command_word" output="screen">
         <param name="appid" value="appid = 551d49a3, work_dir = ." />
-        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/voice_nav.bnf" />
+        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/castlex_voice_nav.bnf" />
         <param name="RES_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/common.jet" />
         <param name="BUILD_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/GrmBuilld" />
-        <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/voiceNav.xml" />
+        <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/castlex_voice_nav.xml" />
     </node>
 
     <!--打开命令词解析-->
-    <node pkg = "castlex_voice_system" type = "voice_nav.py" name = "XML_Analysis" output="screen">
+    <node pkg = "castlex_voice_system" type = "castlex_voice_nav.py" name = "XML_Analysis" output="screen">
         <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
         <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
         <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />

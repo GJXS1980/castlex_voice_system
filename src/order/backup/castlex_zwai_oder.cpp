@@ -1,6 +1,6 @@
 /*
 * 语音听写(iFly Auto Transform)技术能够实时地将语音转换成对应的文字。
-*/
+*/ 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -19,7 +19,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/String.h"
- 
+
 #include "ros/package.h"
 
 using namespace std;
@@ -47,7 +47,7 @@ const char * ASR_RES_PATH        = path1.data(); //离线语法识别资源路�
 string BUILD_path("/bin/msc/res/asr/GrmBuilld");
 string path2 = pkg_path+BUILD_path;
 const char * GRM_BUILD_PATH      = path2.data(); //构建离线语法识别网络生成数据保存路径
-string FILE_path("/bin/bnf/robot_xdu.bnf");
+string FILE_path("/bin/bnf/robot_zwai.bnf");
 string path3 = pkg_path+FILE_path;
 const char * GRM_FILE = path3.data(); //构建离线识别语法网络所用的语法文件
 const char * LEX_NAME            = "contact"; //更新离线识别语法的contact槽（语法文件为此示例中使用的call.bnf）
@@ -62,7 +62,7 @@ typedef struct _UserData {
 int build_grammar(UserData *udata); //构建离线识别语法网络
 int run_asr(UserData *udata); //进行离线语法识别
 
-ros::Publisher xdu_pub;
+ros::Publisher zwai_pub;
 ros::Publisher cmd_pub;
 ros::Publisher start_pub;
 
@@ -71,8 +71,7 @@ typedef struct order_id_t
 {
 	int confidence;
 	int action;
-	int grade;
-	int disinfect;
+	int ziwai;
 
 }order;
 
@@ -193,56 +192,26 @@ static void show_result(char *str, char is_over)
 			order_id.action = my_atoi(pos);		
 		
 		//printf("action-text:%s\n",pos);
-		pos = strstr(str,"grade id"); 
+		pos = strstr(str,"ziwai id"); 
 	
 		if(pos != NULL)
-			order_id.grade = my_atoi(pos);
+			order_id.ziwai = my_atoi(pos);
+				
 
-		//printf("grade-text:%s\n",pos);
-
-		pos = strstr(str,"disinfect id"); 
-	
-		if(pos != NULL)
-			order_id.disinfect = my_atoi(pos);
-		
-		printf("action:%d grade:%d disinfect:%d\n",order_id.action,order_id.grade,order_id.disinfect);
-
-		
-
-		if(order_id.action==1 && order_id.grade == 1 && order_id.disinfect == 1)
+		if(order_id.action==1 && order_id.ziwai)
 		{
 			cmd_msg.data = 1;		
-			xdu_pub.publish(cmd_msg);
-			printf("***********收到命令：开启一级消毒***********\n");
+			zwai_pub.publish(cmd_msg);
+			printf("***********收到命令：开启紫外消毒器***********\n");
 		}
-		else if(order_id.action==1 && order_id.grade == 2 && order_id.disinfect == 1)
+		else if(order_id.action==0 && order_id.ziwai)
 		{
-			cmd_msg.data = 2;		
-			xdu_pub.publish(cmd_msg);
-			printf("***********收到命令：开启二级消毒***********\n");
+			cmd_msg.data = 0;		
+			zwai_pub.publish(cmd_msg);
+			printf("***********收到命令：关闭紫外消毒器***********\n");
 
 
 		}
-		else if(order_id.action==1 && order_id.grade == 3 && order_id.disinfect == 1)
-		{
-			cmd_msg.data = 3;		
-			xdu_pub.publish(cmd_msg);
-			printf("***********收到命令：开启三级消毒***********\n");
-		}
-		else if(order_id.action==1 && order_id.grade == 4)
-		{
-			cmd_msg.data = 4;		
-			xdu_pub.publish(cmd_msg);
-			printf("***********收到命令：开始消毒***********\n");
-
-		}
-		else if(order_id.action==0  && order_id.grade == 4)
-			{
-				cmd_msg.data = 0;		
-				xdu_pub.publish(cmd_msg);
-				printf("***********收到命令：停止消毒***********\n");
-
-			}
 		else return;
 		
 		
@@ -424,13 +393,13 @@ int main(int argc, char* argv[])
 //	printf(path1.data());
 	ros::init(argc, argv, "iot_order_node");    //初始化节点，向节点管理器注册
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("/voice/castle_awake_topic", 1, orderCallback);
+	ros::Subscriber sub = n.subscribe("/voice/castlex_awake_topic", 1, orderCallback);
 	
 	ros::NodeHandle nh("~");    //用于launch文件传递参数
 	nh.param<string>("robot_ack", robot_ack, "/home/castlex/castlex_ws/src/castle_voice_system/res/music/haode.wav");  
 	
-	xdu_pub = n.advertise<std_msgs::Int32>("/Disinfect_CMD_Topic", 1);		// 发布离线命令词识别结果话题
-	cmd_pub = n.advertise<std_msgs::Int32>("/voice/Disinfect_state_topic", 1);	//识别离线命令词成功的flag话题
+	zwai_pub = n.advertise<std_msgs::Int32>("/Ultraviolet_CMD_Topic", 1);		// 发布离线命令词识别结果话题
+	cmd_pub = n.advertise<std_msgs::Int32>("/voice/Ultraviolet_state_topic", 1);	//识别离线命令词成功的flag话题
 	//start_pub = n.advertise<std_msgs::String>("/voice/castle_nlu_topic",3);    	//发布语音合成
 
 //	hello.data = "我是防疫机器人小谷，很高兴为您服务!!!";
