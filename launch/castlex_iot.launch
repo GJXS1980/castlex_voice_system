@@ -2,14 +2,7 @@
 
 <launch>
     <!--打开物联网设备-->
-    <node pkg = "iot_wifi_system" type = "IOT_ARV_Node" name = "IOT_ARV_Node" output="screen">
-	<param name="product_key_param" value="a1KEMZ8ZAov" />
-	<param name="device_name_param" value="HG-PcHost" />
-	<param name="device_secret_param" value="f8a27072944d2658227fb635b61108ea" />
-	<param name="host_param" value="a1KEMZ8ZAov.iot-as-mqtt.cn-shanghai.aliyuncs.com" />
-	<param name="sub_topic_param" value="/broadcast/a1KEMZ8ZAov/IOTmsg" />
-	<param name="pub_topic_param" value="/broadcast/a1KEMZ8ZAov/IOTmsg" />
-    </node>
+    <include file="$(find iot_wifi_system)/launch/castlex_iot_device.launch"/>
 
     <!--打开语音唤醒-->
     <node pkg = "castlex_voice_system" type = "castlex_awake_node" name = "castlex_awake_node" output="screen">
@@ -19,35 +12,10 @@
         <param name="audio_file_path" value="/home/castlex/.ws/castlex_voice_system/bin/audio/awake.wav" />
     </node>
 
-    <!--打开语音合成-->
-    <!--node pkg = "castlex_voice_system" type = "castle_tts_node" name = "castle_tts_node" output="screen">
-        <param name="speech_param" value="voice_name = vixy, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 0" />
-    </node-->
-
-    <!--打开命令词识别-->
-    <!--node pkg = "castlex_voice_system" type = "offline_command_word" name = "offline_command_word" output="screen">
-        <param name="appid" value="appid = 551d49a3, work_dir = ." />
-        <param name="FILE_path" value="/home/castlex/.ws/castlex_voice_system/bin/bnf/castlex_iot.bnf" />
-        <param name="RES_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/common.jet" />
-        <param name="BUILD_path" value="/home/castlex/.ws/castlex_voice_system/bin/msc/res/asr/GrmBuilld" />
-        <param name="xml_path" value="/home/castlex/.ws/castlex_voice_system/params/voiceNav.xml" />
-    </node-->
-    
     <!--打开命令词识别-->
     <node pkg = "castlex_voice_system" type = "iot_order_node" name = "iot_order_node" output="screen"/>
 
-    <!--打开命令词解析-->
-    <!--node pkg = "castlex_voice_system" type = "castlex_iot.py" name = "XML_Analysis" output="screen">
-        <param name="file_path" value="$(find castlex_voice_system)/params/robot_xdu.xml" />
-        <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
-        <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
-        <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />
-	<remap from="/spray_kill" to="/Disinfect_CMD_Topic" />
-    </node-->
 
-
-
-	
 </launch>
 
 
