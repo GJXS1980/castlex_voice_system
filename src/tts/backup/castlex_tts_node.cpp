@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include "qtts.h"
 #include "msp_cmn.h"
@@ -17,10 +16,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <std_msgs/Int32.h>
-
-#include <sstream>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 using namespace std;
 
@@ -224,55 +219,6 @@ exit:
 
 }
 
-void voiceWordsCallback(const std_msgs::String::ConstPtr& msg)
-{
-    char cmd[2000];
-    const char* text;
-    int         ret                  = MSP_SUCCESS;
-	const char* login_params_1 = "appid = ";
-	const char* login_params         = appid.data();//"appid = 5b6d44ed, work_dir = .";//登录参数,appid与msc库绑定,请勿随意改动
-
-	const char* session_begin_params = speech_param.data();//"voice_name = nannan, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 2";
-    // const char* session_begin_params = "voice_name = xiaoyan, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 2";
-    const char* filename             = "../tts_sample.wav"; //合成的语音文件名称
-
-
-    std::cout<<"I heard :"<<msg->data.c_str()<<std::endl;
-    text = msg->data.c_str(); 
-
-    /* 文本合成 */
-    printf("开始合成 ...\n");
-
-	ret = MSPLogin(NULL, NULL, login_params);//第一个参数是用户名，第二个参数是密码，第三个参数是登录参数，用户名和密码可在http://www.xfyun.cn注册获取
-    // ret = text_to_speech(text, filename, session_begin_params);
-	if (MSP_SUCCESS != ret)
-	{
-		printf("MSPLogin failed, error code: %d.\n", ret);
-		goto exit ;//登录失败，退出登录
-	}
-
-	printf("开始合成 ...\n");
-	
-	ret = text_to_speech(text, filename, session_begin_params);
-	if (MSP_SUCCESS != ret)
-	{
-		printf("text_to_speech failed, error code: %d.\n", ret);
-	}
-	printf("合成完毕\n");
-
-exit:
-	printf("按任意键退出 ...\n");
-	//getchar();
-	MSPLogout(); //退出登录
- 
-    unlink("/tmp/cmd");  
-    mkfifo("/tmp/cmd", 0777);  
-    popen("mplayer -quiet -slave -input file=/tmp/cmd '../tts_sample.wav'","r");
-    sleep(3);
-
-}
-
-
 void playWav()
 {
 	//printf("~~~~~~~~~~~~~~~~~~~");
@@ -334,9 +280,6 @@ int main(int argc, char* argv[])
 	const char* start = "您好，我是广州慧谷Castle-X机器人";
 	make_text_to_wav(start, fileName);
 	playWav();
-
-	ros::Subscriber word_sub =n.subscribe("voiceWords", 1000,voiceWordsCallback);
-
 	ros::Rate loop_rate(1);    //10Hz循环周期
 	while(ros::ok())
 	{
