@@ -8,7 +8,7 @@ from std_msgs.msg import Int32MultiArray, Int32, String
 
 class XML_Analysis():
     def __init__(self):
-        self.result, self.iot_id, self.action_id, self.result_confidence_data = None, 0, 0, None
+        self.result, self.iot_id, self.action_id, self.result_confidence_data_action, self.result_confidence_data_action = None, 0, 0, 0, 0
         self.cmd_flag = False
         self.position_id = None
         self.goal_point_msg = None
@@ -32,6 +32,7 @@ class XML_Analysis():
         self.trashcan_reset_pub = rospy.Publisher('/Trashcan_RESET_Topic', Int32, queue_size = 1)  
         # 门铃控制话题
         self.door_pub = rospy.Publisher('/Door_CMD_Topic', Int32, queue_size = 1)  
+        self.gateway_pub = rospy.Publisher('/Gateway_CMD_Topic', Int32, queue_size = 1)  
 
         # self.r = rospy.Rate(10)
         #   主函数
@@ -55,10 +56,12 @@ class XML_Analysis():
         swap_confidence = swap.replace('|',',')
         swap_confidence = swap_confidence.split(',')
         #   将字符串转换成整型
-        if len(swap_confidence) == 3:
-            self.result_confidence_data = int(swap_confidence[1])
+        if len(swap_confidence) == 2:
+            self.result_confidence_data_action = int(swap_confidence[0])
+            self.result_confidence_data_iot = int(swap_confidence[1])
         else:
             pass
+            
         return id_data
 
     #   对离线命令词结果进行处理
@@ -72,25 +75,46 @@ class XML_Analysis():
 
     def cmd_callback(self, data):
         self.result = data.data
-        flag = self.focus_data("<focus>", "</focus>")
-        # print(flag)
-        if flag == 28:
-            #   识别消毒等级
-            self.action_id = self.id_data("<action", "</action>")
-            #   识别是否打开还是关闭消毒功能
-            self.iot_id = self.id_data("<iot", "</iot>")
-            self.Process_Speech_cmd_to_Speed()
-            self.cmd_flag = False
-        else:
-            pass
-    #	关卧室灯
-    def light_bedroom_off(self, data):
-        self.result = data 
- 
-    #	开卧室灯
-    def light_bedroom_on(self, data):
-        self.result = data.data
+        self.action_id = self.id_data("<action", "</action>")
+        self.iot_id = self.id_data("<iot", "</iot>")
 
+        self.Process_Speech_cmd_to_Speed()
+
+    #   对离线命令词结果进行处理
+    def pub_data(self, action_data, iot_data):
+        if action_data == 0:
+            if iot_data == 1:
+                self.lighting_pub.publish(6)
+            elif iot_data == 2:
+                self.lighting_pub.publish(5)
+            elif iot_data == 3:
+                self.lighting_pub.publish(3)
+            elif iot_data == 6:
+                self.trashcan_pub.publish(0)
+            elif iot_data == 8:
+                self.gateway_pub.publish(0)
+            elif iot_data == 9:
+                self.lighting_pub.publish(0)
+
+        elif action_data == 1:
+            if iot_data == 1:
+                self.lighting_pub.publish(1)
+            elif iot_data == 2:
+                self.lighting_pub.publish(2)
+            elif iot_data == 3:
+                self.lighting_pub.publish(4)
+            elif iot_data == 4:
+                self.door_pub.publish(1)
+            elif iot_data == 5:
+                self.door_pub.publish(2)
+            elif iot_data == 6:
+                self.trashcan_pub.publish(1)
+            elif iot_data == 7:
+                self.door_pub.publish(3)
+            elif iot_data == 8:
+                self.gateway_pub.publish(1)
+            elif iot_data == 9:
+                self.lighting_pub.publish(7)
 
     def Process_Speech_cmd_to_Speed(self):
         self.goal_point_msg = Int32()
@@ -99,23 +123,21 @@ class XML_Analysis():
             playsound(self.voice3)
         else:
             #   判断语音识别的置信度是否达到要求
-            if self.result_confidence_data > 40:
-                if self.action_id == 0 and self.iot_id == 0:
-                    self.light_data = 000
-                    self.lighting_pub.publish(self.light_data)
-                self.goal_point_msg.data = [self.action_id, self.iot_id]
-                #   发布命令词识别结果
-                self.pub.publish(self.goal_point_msg)
+            if self.result_confidence_data_action > 40 and self.result_confidence_data_iot > 40:
+                print(self.action_id, self.iot_id, self.result_confidence_data_action, self.result_confidence_data_iot)
+                self.pub_data(self.action_id, self.iot_id)
+                # if self.action_id == 0 and self.iot_id == 0:
+                #     self.light_data = 000
+                #     self.lighting_pub.publish(self.light_data)
+                # self.goal_point_msg.data = [self.action_id, self.iot_id]
+                # #   发布命令词识别结果
+                # self.pub.publish(self.goal_point_msg)
                 print('小谷：好的，收到!')
                 playsound(self.voice2)
                 self.result_confidence_data = 0               
             else:
                 print('语音识别未通过，请重新输入！')
                 playsound(self.voice1)    
-
-
-
-
 
 if __name__ == '__main__':
     XML_Analysis()
