@@ -56,9 +56,7 @@ class XML_Analysis():
             self.result_confidence_data = int(swap_confidence[0])
 
     def cmd_callback(self, data):
-
         self.result = data.data
-
         self.analysis_id("<action", "</action>")
                 # self.analysis_confidence()
         self.Process_Speech_cmd_to_Speed()

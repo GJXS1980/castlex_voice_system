@@ -65,17 +65,22 @@ class XML_Analysis():
     def cmd_callback(self, data):
 
         self.result = data.data
-        flag = self.focus_data("<focus>", "</focus>")
         # print(flag)
-        if flag == 28:
-            #   识别消毒等级
-            self.grade_id = self.id_data("<grade", "</grade>")
-            #   识别是否打开还是关闭消毒功能
-            self.action_id = self.id_data("<action", "</action>")
-            self.Process_Speech_cmd_to_Speed()
-            self.cmd_flag = False
-        else:
-            pass
+        #   识别消毒等级
+        self.grade_id = self.id_data("<grade", "</grade>")
+        #   识别是否打开还是关闭消毒功能
+        self.action_id = self.id_data("<action", "</action>")
+        self.Process_Speech_cmd_to_Speed()
+        
+        # if flag == 28:
+        #     #   识别消毒等级
+        #     self.grade_id = self.id_data("<grade", "</grade>")
+        #     #   识别是否打开还是关闭消毒功能
+        #     self.action_id = self.id_data("<action", "</action>")
+        #     self.Process_Speech_cmd_to_Speed()
+        #     self.cmd_flag = False
+        # else:
+        #     pass
 
     def Process_Speech_cmd_to_Speed(self):
         if (self.position_id == 306):
@@ -84,7 +89,10 @@ class XML_Analysis():
         else:
             #   判断语音识别的置信度是否达到要求
             if self.result_confidence_data > 40:
-                self.goal_point_msg = Int32MultiArray()
+                if self.action_id == 0:
+                    self.pub.publish(0)
+                elif self.action_id == 1:
+                    self.pub.publish(self.grade_id)
                 #self.goal_point_msg.data = [self.grade_id, self.action_id]
                 #   发布命令词识别结果
                 #self.pub.publish(self.goal_point_msg)

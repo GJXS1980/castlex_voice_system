@@ -26,7 +26,7 @@
         <param name="failed_file_path" value="$(find castlex_voice_system)/params/voice/failed.mp3" />
         <param name="Received_file_path" value="$(find castlex_voice_system)/params/voice/Received.mp3" />
         <param name="ReEnterAuido_file_path" value="$(find castlex_voice_system)/params/voice/ReEnterAuido.mp3" />
-	<remap from="/ultraviolet_disinfection" to="/Ultraviolet_CMD_Topic" />
+	<!--remap from="/ultraviolet_disinfection" to="/Ultraviolet_CMD_Topic" /-->
     </node>
 
 </launch>
