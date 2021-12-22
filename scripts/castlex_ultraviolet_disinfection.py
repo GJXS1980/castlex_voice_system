@@ -24,7 +24,7 @@ class XML_Analysis():
 
         #在launch文件中获取参数
         self.sub = rospy.Subscriber('/voice/castlex_order_topic', String , self.cmd_callback)  #   订阅离线命令词识别结果话题
-        self.pub = rospy.Publisher('/ultraviolet_disinfection', Int64, queue_size = 1)  #   发布离线命令词识别的命令词话题
+        self.pub = rospy.Publisher('/ultraviolet_disinfection', Int32, queue_size = 1)  #   发布离线命令词识别的命令词话题
 
         self.r = rospy.Rate(10)
 

@@ -23,7 +23,7 @@ class XML_Analysis():
 
         #在launch文件中获取参数
         self.sub = rospy.Subscriber('/voice/castlex_order_topic', String , self.cmd_callback)  #   订阅离线命令词识别结果话题
-        self.pub = rospy.Publisher('/spray_kill', Int32MultiArray, queue_size = 1)  #   发布离线命令词识别的命令词话题
+        self.pub = rospy.Publisher('/spray_kill', Int32, queue_size = 1)  #   发布离线命令词识别的命令词话题
 
         # self.r = rospy.Rate(10)
         #   主函数
@@ -85,9 +85,9 @@ class XML_Analysis():
             #   判断语音识别的置信度是否达到要求
             if self.result_confidence_data > 40:
                 self.goal_point_msg = Int32MultiArray()
-                self.goal_point_msg.data = [self.grade_id, self.action_id]
+                #self.goal_point_msg.data = [self.grade_id, self.action_id]
                 #   发布命令词识别结果
-                self.pub.publish(self.goal_point_msg)
+                #self.pub.publish(self.goal_point_msg)
                 print('小谷：好的，收到!')
                 playsound(self.voice2)
                 self.result_confidence_data = 0               
