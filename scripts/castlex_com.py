@@ -6,5 +6,5 @@ from castlex_com_python import COM_XML_Analysis
 if __name__ == '__main__':
   try:
     COM_XML_Analysis()
-  except rospy.ROSInterruptException:
-    rospy.loginfo("com failed.")
+  except SerialException:
+    os._exit(0)

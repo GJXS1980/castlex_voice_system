@@ -8,10 +8,11 @@ from std_msgs.msg import Int32MultiArray, Int32, String
 
 class XML_Analysis():
     def __init__(self):
-        self.result, self.action_id, self.grade_id, self.result_confidence_data = None, 0, 0, None
+        self.result, self.iot_id, self.action_id, self.result_confidence_data_action, self.result_confidence_data_action = None, 0, 0, 0, 0
         self.cmd_flag = False
         self.position_id = None
         self.goal_point_msg = None
+        self.light_data = 000
 
         #   初始化ROS节点
         rospy.init_node('XML_Analysis', log_level=rospy.INFO)
@@ -23,8 +24,17 @@ class XML_Analysis():
 
         #在launch文件中获取参数
         self.sub = rospy.Subscriber('/voice/castlex_order_topic', String , self.cmd_callback)  #   订阅离线命令词识别结果话题
-        self.pub = rospy.Publisher('/spray_kill', Int32, queue_size = 1)  #   发布离线命令词识别的命令词话题
-
+        # 灯控制话题
+        self.lighting_pub = rospy.Publisher('/Lighting_CMD_Topic', Int32, queue_size = 1)  
+        # 窗帘控制话题
+        self.trashcan_pub = rospy.Publisher('/Trashcan_CMD_Topic', Int32, queue_size = 1)  
+        # 窗帘复位话题
+        self.trashcan_reset_pub = rospy.Publisher('/Trashcan_RESET_Topic', Int32, queue_size = 1)  
+        # 门铃控制话题
+        self.door_pub = rospy.Publisher('/Door_CMD_Topic', Int32, queue_size = 1)  
+        self.gateway_pub = rospy.Publisher('/Gateway_CMD_Topic', Int32, queue_size = 1)  
+        # 控制话题
+        self.iot_ini_pub = rospy.Publisher('/iot_control', Int32MultiArray, queue_size = 1)  
         # self.r = rospy.Rate(10)
         #   主函数
         while not rospy.is_shutdown():
@@ -47,10 +57,12 @@ class XML_Analysis():
         swap_confidence = swap.replace('|',',')
         swap_confidence = swap_confidence.split(',')
         #   将字符串转换成整型
-        if len(swap_confidence) == 3:
-            self.result_confidence_data = int(swap_confidence[1])
+        if len(swap_confidence) == 2:
+            self.result_confidence_data_action = int(swap_confidence[0])
+            self.result_confidence_data_iot = int(swap_confidence[1])
         else:
             pass
+            
         return id_data
 
     #   对离线命令词结果进行处理
@@ -63,39 +75,36 @@ class XML_Analysis():
         return swap
 
     def cmd_callback(self, data):
-
         self.result = data.data
-        # print(flag)
-        #   识别消毒等级
-        self.grade_id = self.id_data("<grade", "</grade>")
-        #   识别是否打开还是关闭消毒功能
         self.action_id = self.id_data("<action", "</action>")
+        self.iot_id = self.id_data("<iot", "</iot>")
+
         self.Process_Speech_cmd_to_Speed()
-        
-        # if flag == 28:
-        #     #   识别消毒等级
-        #     self.grade_id = self.id_data("<grade", "</grade>")
-        #     #   识别是否打开还是关闭消毒功能
-        #     self.action_id = self.id_data("<action", "</action>")
-        #     self.Process_Speech_cmd_to_Speed()
-        #     self.cmd_flag = False
-        # else:
-        #     pass
+
+    #   对离线命令词结果进行处理
+    def pub_data(self, action_data, iot_data):
+
+        if action_data == 0 or action_data == 1:
+            self.iot_data = Int32MultiArray()
+            self.iot_data.data = [iot_data, action_data]
+            self.iot_ini_pub.publish(self.iot_data)
 
     def Process_Speech_cmd_to_Speed(self):
+        self.goal_point_msg = Int32()
         if (self.position_id == 306):
             print('您输入的信息不完整，请重新输入！')
             playsound(self.voice3)
         else:
             #   判断语音识别的置信度是否达到要求
-            if self.result_confidence_data > 40:
-                if self.action_id == 0:
-                    self.pub.publish(0)
-                elif self.action_id == 1:
-                    self.pub.publish(self.grade_id)
-                #self.goal_point_msg.data = [self.grade_id, self.action_id]
-                #   发布命令词识别结果
-                #self.pub.publish(self.goal_point_msg)
+            if self.result_confidence_data_action > 40 and self.result_confidence_data_iot > 40:
+                print(self.action_id, self.iot_id, self.result_confidence_data_action, self.result_confidence_data_iot)
+                self.pub_data(self.action_id, self.iot_id)
+                # if self.action_id == 0 and self.iot_id == 0:
+                #     self.light_data = 000
+                #     self.lighting_pub.publish(self.light_data)
+                # self.goal_point_msg.data = [self.action_id, self.iot_id]
+                # #   发布命令词识别结果
+                # self.pub.publish(self.goal_point_msg)
                 print('小谷：好的，收到!')
                 playsound(self.voice2)
                 self.result_confidence_data = 0               

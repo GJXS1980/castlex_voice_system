@@ -6,5 +6,5 @@ from castlex_object_detect_python import OBJECT_XML_Analysis
 if __name__ == '__main__':
   try:
     OBJECT_XML_Analysis()
-  except rospy.ROSInterruptException:
-    rospy.loginfo("object_detect failed.")
+  except SerialException:
+    os._exit(0)
