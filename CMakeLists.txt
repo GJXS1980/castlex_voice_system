@@ -21,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+#catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -272,13 +272,14 @@ target_link_libraries(castlex_awake_node ${catkin_LIBRARIES} -lmsc -lrt -ldl -lp
 add_executable(offline_command_word src/order/offline_command_word.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
 target_link_libraries(offline_command_word ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
-
+add_executable(offline_command_word_voice_node src/order/offline_command_word_voice.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
+target_link_libraries(offline_command_word_voice_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
 install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-install(TARGETS iot_order_node castlex_tts_node castlex_nlu_node castlex_asr_node castlex_awake_node   offline_command_word
+install(TARGETS iot_order_node castlex_tts_node castlex_nlu_node castlex_asr_node castlex_awake_node   offline_command_word offline_command_word_voice_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -288,6 +289,19 @@ install(
   DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+
+install(
+  DIRECTORY scripts
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+
+
+#install(
+#  DIRECTORY scripts
+#  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+#)
 
  install(FILES
 	setup.sh
@@ -299,10 +313,10 @@ install(
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
  )
 
-install(
-  DIRECTORY scripts
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+#install(
+#  DIRECTORY scripts
+#  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+#)
 
 install(
   DIRECTORY libs
