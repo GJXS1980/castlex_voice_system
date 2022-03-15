@@ -45,6 +45,10 @@ string xml_path;    //用于获取launch传递函数
 string voice1_path;    // 去中转台
 string voice2_path;    // 回原点
 string voice3_path;    // 去立体仓库
+string voice4_path;    // 去中转台抓取物料
+string voice5_path;    // 去立体仓库放置物料
+string voice6_path;    // 去装配台放置物料
+string voice7_path;    // 去装配台
 
 string temp_path;
 string pkg_path = ros::package::getPath("castlex_voice_system");
@@ -82,6 +86,18 @@ int get_audio_file()
 			case 51:
 				// printf("\n3.去立体仓库\n");
 				return 51;
+			case 52:
+				// printf("\n4.去中转台放置物料\n");
+				return 52;
+			case 53:
+				// printf("\n5.去立体仓库放置物料\n");
+				return 53;
+			case 54:
+				// printf("\n6.去装配台放置物料\n");
+				return 54;
+			case 55:
+				// printf("\n7.去装配台\n");
+				return 55;
 			default:
 				break;
 		}
@@ -436,6 +452,14 @@ int run_asr(UserData *udata)
 	const char * nav2_data = nav2_path.data(); // 回原点音频
 	string nav3_path = voice3_path;
 	const char * nav3_data = nav3_path.data(); // 去立体仓库音频
+	string nav4_path = voice4_path;
+	const char * nav4_data = nav4_path.data(); // 去中转台抓取物料音频
+	string nav5_path = voice5_path;
+	const char * nav5_data = nav5_path.data(); // 去立体仓库放置物料音频
+	string nav6_path = voice6_path;
+	const char * nav6_data = nav6_path.data(); // 去装配台放置物料音频
+	string nav7_path = voice7_path;
+	const char * nav7_data = nav7_path.data(); // 去装配台音频
 
 	//离线语法识别参数设置
 	snprintf(asr_params, MAX_PARAMS_LEN - 1, 
@@ -461,6 +485,10 @@ int run_asr(UserData *udata)
 				printf("1.去物料台/中转台\n");
 				printf("2.回原点\n");
 				printf("3.去立体仓库\n");
+				printf("4.去中转台抓取物料\n");
+				printf("5.去立体仓库放置物料\n");
+				printf("6.去装配台放置物料\n");
+				printf("7.去装配台\n");
 
 				// 选择音频
 				asr_audiof = get_audio_file();
@@ -477,9 +505,26 @@ int run_asr(UserData *udata)
 					case 51:
 						// 播放去立体仓库音频
 						demo_file(nav3_data, asr_params); 
+						break;		
+					case 52:
+						// 播放去中转台抓取物料音频
+						demo_file(nav4_data, asr_params); 
 						break;
+					case 53:
+						// 播放去立体仓库放置物料音频
+						demo_file(nav5_data, asr_params); 
+						break;
+					case 54:
+						// 播放去装配台放置物料音频
+						demo_file(nav6_data, asr_params); 
+						break;
+					case 55:
+						// 播放去装配台音频
+						demo_file(nav7_data, asr_params); 
+						break;
+
 					default:
-						break;					
+						break;				
 				}
 			}
 
@@ -565,6 +610,10 @@ int main(int argc, char* argv[])
 	nh.param("voice1_path", voice1_path, std::string("/bin/bnf/wav/zzt.wav"));    // 去中转台
 	nh.param("voice2_path", voice2_path, std::string("/bin/bnf/wav/yd.wav"));    // 回原点
 	nh.param("voice3_path", voice3_path, std::string("/bin/bnf/wav/ltck.wav"));    // 去立体仓库
+	nh.param("voice4_path", voice4_path, std::string("/bin/bnf/wav/ltck.wav"));    // 去中转台抓取物料
+	nh.param("voice5_path", voice5_path, std::string("/bin/bnf/wav/ltck.wav"));    // 去立体仓库放置物料
+	nh.param("voice6_path", voice6_path, std::string("/bin/bnf/wav/ltck.wav"));    // 去装配台放置物料
+	nh.param("voice7_path", voice7_path, std::string("/bin/bnf/wav/ltck.wav"));    // 去装配台
 
 
 	ros::Publisher pub = n.advertise<std_msgs::String>("/voice/castlex_order_topic", 3);	// 发布离线命令词识别结果话题
