@@ -27,6 +27,8 @@
     <!--打开语义理解-->
     <node pkg = "castlex_voice_system" type = "castlex_nlu_node" name = "castlex_nlu_node" output="screen">
         <param name="userid" value="HGcastle" />
+        <param name="tuling_key" value="28547145be394c5cacfc5981e093836e" />
+
     </node>
     
     <!--打开语音识别-->
