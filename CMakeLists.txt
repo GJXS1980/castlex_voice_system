@@ -275,11 +275,15 @@ target_link_libraries(offline_command_word ${catkin_LIBRARIES} -lrt -ldl -lpthre
 add_executable(offline_command_word_voice_node src/order/offline_command_word_voice.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
 target_link_libraries(offline_command_word_voice_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
 
+add_executable(castlex_asr_voice_node src/asr/castlex_asr_voice_node.cpp src/speech_recognizer.cpp src/linuxrec.cpp)
+target_link_libraries(castlex_asr_voice_node ${catkin_LIBRARIES} -lrt -ldl -lpthread -lasound -lmsc)
+
+
 install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-install(TARGETS iot_order_node castlex_tts_node castlex_nlu_node castlex_asr_node castlex_awake_node   offline_command_word offline_command_word_voice_node
+install(TARGETS iot_order_node castlex_tts_node castlex_nlu_node castlex_asr_node castlex_awake_node   offline_command_word offline_command_word_voice_node  castlex_asr_voice_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

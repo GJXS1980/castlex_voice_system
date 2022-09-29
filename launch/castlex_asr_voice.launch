@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<launch>
+
+    <!--运行科大讯飞在线语音识别功能包-->
+    <node pkg = "castlex_voice_system" type = "castlex_asr_voice_node" name = "castlex_asr_voice_node" output="screen">
+
+        <!--会话参数-->
+        <param name="speech_param" value="sub = iat, domain = iat, language = zh_cn, accent = mandarin, sample_rate = 16000, result_type = plain, result_encoding = utf8" />
+        <param name="appid" value="appid = 551d49a3, work_dir = ." />
+        <param name="FILE_path" value="$(find castlex_voice_system)/bin/bnf/go.bnf" />
+        <param name="RES_path" value="$(find castlex_voice_system)/bin/msc/res/asr/common.jet" />
+        <param name="BUILD_path" value="/home/hgsim/catkin_ws/src/castlex_voice_system/bin/msc/res/asr/GrmBuilld" />
+        <!--param name="xml_path" value="/home/hgsim/catkin_ws/src/castlex_voice_system/params/castlex_voice_nav.xml" /-->
+    </node>
+    <node pkg="castlex_voice_system" name="test" type="test.py" output="screen">
+    </node>
+</launch>

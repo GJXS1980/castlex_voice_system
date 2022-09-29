@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 int flag = 0;
 string result;
 string tuling_key; //default tuling key
@@ -22,6 +21,7 @@ int writer(char *data, size_t size, size_t nmemb, string *writerData)
      {
          return -1;
      }
+     
      int len = size*nmemb;
      writerData->append(data, len);
      return len;
@@ -43,12 +43,51 @@ int parseJsonResonse(string input)    //由返回的json数据解析出text文�
         cout << "!!! Failed to parse the response data" <<endl;
         return 1;
     }
-    const Json::Value code = root["code"];    //root是取出code对应的值
-    const Json::Value text = root["text"];
+
+/**
+{
+    "intent":{
+        "appKey":
+            "platform.weather",
+            "code":0,
+            "operateState":1100,
+            "parameters":{
+                "date":"",
+                "city":"广州"
+                }
+            },
+        "results":
+            [
+                {
+                    "groupType":0,
+                    "resultType":"text",
+                    "values":{
+                    "text":"广州:周四 09月29日,多云 持续无风向,最低气温25度，最高气温34度。"
+                    }
+                }
+            ]
+}
+
+ */
+
+    // int file_size = root["results"].size();
+    // for(int i = 0; i < file_size; ++i) 
+    // {  
+    //   Json::Value val_image = root["files"][i]["images"];  
+    //   int image_size = val_image.size();  
+    //   for(int j = 0; j < image_size; ++j)  
+    //   {  
+    //     std::string type = val_image[j]["type"].asString();  
+    //     std::string url = val_image[j]["url"].asString();  
+    //   }  
+    // }
+
+    const Json::Value code = root["intent"]["code"];    //root是取出code对应的值
+    const Json::Value text = root["results"][0]["values"]["text"];
     result = text.asString();
     flag = 1;
     cout << "response code:" << code << endl;
-    cout << "response text:" << result <<endl;
+    cout << "response results:" << result <<endl;
 
     return 0;
 }
@@ -66,20 +105,41 @@ int HttpPostRequest(string input, string key)
 “info”: “今天天气怎么样”,
 "userid": "HGcastle"   
 }
+
+{
+        "reqType": 0,
+        "perception": {
+            "inputText": {
+                "text": question
+            }
+        },
+        "userInfo": {
+            "apiKey": "14daac8ca27b4170a46d8f0ea1d29d88",
+            "userId": "1234"
+        }
+    }
+
 */
     std::string strJson = "{";
-    strJson += "\"key\" : ";
+    strJson += "\"reqType\" : 0,";
+    strJson += "\"perception\" : {";
+    strJson += "\"inputText\" : {";
+    strJson += "\"text\" : ";
+    strJson += "\"";
+    strJson += input;
+    strJson += "\"";
+    strJson += "}";
+    strJson += "},";
+    strJson += "\"userInfo\" : {";
+    strJson += "\"apiKey\" : ";
     strJson += "\"";
     strJson += key;
     strJson += "\",";
-    strJson += "\"info\" : ";
-    strJson += "\"";
-    strJson += input;
-    strJson += "\",";
-    strJson += "\"userid\" : ";    //设置userid可进入上下文语境
+    strJson += "\"userId\" : ";
     strJson += "\"";
     strJson += userid;
     strJson += "\"";
+    strJson += "}";
     strJson += "}";
 
     cout<< "post json string:" << strJson <<endl;
@@ -98,7 +158,7 @@ int HttpPostRequest(string input, string key)
             curl_easy_setopt(pCurl, CURLOPT_TIMEOUT, 5);    //设置接受超时时间
 
             // First set the URL that is about to receive our POST.
-            curl_easy_setopt(pCurl, CURLOPT_URL, "http://www.tuling123.com/openapi/api");    //设置接口地址，注意图灵Ｖ1和V2的接口地址不一样
+            curl_easy_setopt(pCurl, CURLOPT_URL, "http://openapi.tuling123.com/openapi/api/v2");    //设置接口地址，注意图灵Ｖ1和V2的接口地址不一样
 
             // set curl http header
             curl_slist *plist = curl_slist_append(NULL,"Content-Type:application/json; charset=UTF-8");    //将json格式及utf-8编码方式放置到消息首

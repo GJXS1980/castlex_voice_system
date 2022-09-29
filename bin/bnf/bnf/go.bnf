@@ -1,0 +1,12 @@
+﻿﻿#BNF+IAT 1.0 UTF-8;
+!grammar call;
+!slot <action>;
+!slot <position>;
+
+!start <callstart>;
+<callstart>:[<action>]<dial>;
+<action>:打开|到;
+
+<dial>:<position>;
+<position>:全部!id(0)|全部灯!id(0)|医院大厅!id(0)|医院大厅的灯!id(0)|医疗室的灯!id(0)|医疗室!id(0)|病房!id(0)|病房的灯!id(0)|病房的窗帘!id(0)|窗帘!id(0)|病房完成紫外消杀!id(0)|医院大厅完成紫外消杀!id(0)|医院大厅消杀!id(0)|治疗室完成紫外消杀!id(0);
+
