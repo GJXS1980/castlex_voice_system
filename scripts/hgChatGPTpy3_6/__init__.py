@@ -19,7 +19,7 @@ versions = [int(v) for v in python_version_tuple()]
 if versions[0] < 3:
     error = t.NotAllowRunning("Not available Python version")
     raise error
-elif versions[1] < 6:
+elif versions[1] < 5:
     error = t.NotAllowRunning(f"Not available Python version: {python_version()}")
     raise error
 else:
