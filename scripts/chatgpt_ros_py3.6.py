@@ -9,8 +9,8 @@ from tkinter import scrolledtext
 import threading
 from hgChatGPTpy3_6.V1 import Chatbot
 
-# sudo apt-get install espeak
-# sudo pip install pyttsx3
+# sudo apt-get install espeak python3-tk
+# sudo pip3 install pyttsx3 prompt_toolkit httpx==0.14.0
 
 class ChatGPT_ROS():
     def __init__(self):
