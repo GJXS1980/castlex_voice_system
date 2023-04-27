@@ -8,7 +8,6 @@ import tkinter as tk
 from tkinter import scrolledtext
 import threading
 from hgChatGPTpy3_6.V1 import Chatbot
-
 # sudo apt-get install espeak python3-tk
 # sudo pip3 install pyttsx3 prompt_toolkit httpx==0.14.0
 
@@ -36,9 +35,18 @@ class ChatGPT_ROS():
 
         t = threading.Thread(target=self.msg_recv)
         t.start()
+        mainWindow.mainloop()
         while not rospy.is_shutdown():
-            tk.mainloop()
-        
+            # 通过定时器让 tkinter 更新窗口
+            self.update_window()
+            self.timer = self.show_msg.after(100, self.update_window)
+
+    def update_window(self):
+        time.sleep(0.01)
+        self.show_msg.update_idletasks()
+        self.show_msg.update()
+
+
     def voice_callback(self, data):
         self.result = data.data
         prev_text = ""
@@ -50,6 +58,7 @@ class ChatGPT_ROS():
 
     def msg_recv(self):
         while not rospy.is_shutdown():
+            time.sleep(0.01)
             if self.result != None:
                 self.count_q += 1
                 self.show_msg.insert(tk.END, "Q" + str(self.count_q) + ":" + self.result + "\n")
